@@ -1,0 +1,23 @@
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
+
+app.get('/', function(req, res) {
+  res.sendFile(__dirname + '/index.html');
+});
+
+app.get('/about?params', function(req, res) {
+  res.send("<h1>HeLLo</h1>");
+  console.dir(req.query);
+});
+
+
+io.on('connection', function(socket){
+  socket.on('send message', function(msg) {
+	io.emit('receive message', msg);
+  });
+});
+
+http.listen(3000, function() {
+  console.log('listening on http://localhost:3000');
+});
